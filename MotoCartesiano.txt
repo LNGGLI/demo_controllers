@@ -1,0 +1,81 @@
+
+
+Controllo di moto in cartesiano: 
+
+1. Nel file cartesian_pose_controller.h definire una classe che estende:
+
+    controller_interface::MultiInterfaceController<franka_hw::FrankaPoseCartesianInterface,
+                                                            franka_hw::FrankaStateInterface>
+ 
+    Nota: le hardware interface utilizzate come parametri template sono #2
+	
+	* franka_hw::FrankaPoseCartesianInterface: permette di leggere la posa in cartesiano e comandarle.
+	* franka_hw::FrankaStateInterface: permette di leggere l'intero stato del robot.
+         
+	Nella classe si possono definire preventivamente un'interfaccia e un handler
+       
+       	- L'interfaccia è dello stesso tipo del parametro della template class:  
+		   franka_hw::FrankaPoseCartesianInterface* cartesian_pose_interface_;
+       		
+       	- L'handler è in questo caso un unique pointer ad un FrankaCartesianPoseHandle:
+		   std::unique_ptr<franka_hw::FrankaCartesianPoseHandle> cartesian_pose_handle_;
+ 
+2. Nel file cartesian_pose_controller.cpp implementare i metodi obbligatori: 
+
+   * bool init (hardware_interface::RobotHW* hw, ros::NodeHandle& nh); 
+   	
+		Per ogni interfaccia hardware dichiarata come template parameter si può inizializzare una variabile 
+		interfaccia e successivamente l'handler. In ordine
+
+		Per l'interfaccia hardware franka_hw::FrankaPoseCartesianInterface:
+			Si inizializzano le variabili definite preventivamente nel .h:
+
+				1. cartesian_pose_interface_ = robot_hardware->get<franka_hw::FrankaPoseCartesianInterface>();
+
+				2. cartesian_pose_handle_ = std::make_unique<franka_hw::FrankaCartesianPoseHandle>(
+					cartesian_pose_interface_->getHandle(arm_id + "_robot"));
+
+		Per l'interfaccia hardware franka_hw::FrankaStateInterface:
+
+				1. auto state_interface = robot_hardware->get<franka_hw::FrankaStateInterface>();
+
+				2. auto state_handle = state_interface->getHandle(arm_id + "_robot");
+	
+	Nota: state_handle per come è definito nell'esempio cartesian_pose_example_controller.cpp ha 
+	      visibilità solo nella funzione di init. In update l'unico handler che sopravvive è 
+		  cartesian_pose_handle_! 
+	
+   * void update (const ros::Time& time, const ros::Duration& period);  
+   		
+   		In questo metodo va definito il loop di controllo che verrà eseguito ad una frequenza di 1kHz.
+   		Nel caso di controllo di moto in spazio giunti il comando da utilizzare è:
+   			position_joint_handles_[i].setCommand(valore_q_i);
+    		
+    		
+3. Si possono implementare i due metodi opzionali:
+	void starting (const ros::Time& time); // Eseguito prima di update
+	void stopping (const ros::Time& time);  // Eseguito al termine del loop di update
+
+
+
+
+
+# Metodi utili
+ *  std::array<double, 16> initial_pose_{};
+ 	initial_pose_ = cartesian_pose_handle_->getRobotState().O_T_EE_d;
+
+ *  std::array<double, 16> new_pose = initial_pose_;
+ 	new_pose[12] -= delta_x;
+ 	new_pose[14] -= delta_z;
+ 	cartesian_pose_handle_->setCommand(new_pose);
+
+ * state_handle.getRobotState().q_d // variabili di giunto
+ 
+   
+   
+   
+   
+   
+   
+   
+   

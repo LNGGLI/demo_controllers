@@ -1,0 +1,28 @@
+
+
+Come utilizzare il gripper.
+Serve interfacciarsi con il nodo: franka_gripper_node nel package franka_gripper.
+
+Il nodo pubblica su un topic lo stato del gripper e fornisce le seguenti azioni e i 
+seguenti server:
+
+1 franka_gripper::MoveAction(width, speed): moves to a target width with the defined speed.
+
+2 franka_gripper::GraspAction(width, epsilon_inner, epsilon_outer, speed, force): tries to grasp at the desired width with a desired force while closing with the given speed. The operation is successful if the distance d
+between the gripper fingers is: width - ϵ inner<d<width+ ϵ outer
+
+3 franka_gripper::HomingAction(): homes the gripper and updates the maximum width given the mounted fingers.
+
+
+
+4 franka_gripper::StopAction(): aborts a running action. This can be used to stop applying forces after grasping.
+
+5 control_msgs::GripperCommandAction(width, max_effort): A standard gripper action recognized by MoveIt!.
+
+
+Si può lanciare il "franka_gripper_node" con il seguente comando:
+
+roslaunch franka_gripper franka_gripper.launch robot_ip:=<fci-ip>
+
+
+

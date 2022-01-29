@@ -1,0 +1,125 @@
+
+
+Esempio di controllo di impedenza in spazio giunti: 
+
+1. Nel file joint_impedance_controller.h definire una classe che estende:
+
+	controller_interface::MultiInterfaceController<
+								franka_hw::FrankaModelInterface,
+								hardware_interface::EffortJointInterface,
+								franka_hw::FrankaPoseCartesianInterface>
+
+    Nota: le hardware interface utilizzate come parametri template sono #3 e permettono di 
+
+	* franka_hw::FrankaModelInterface: leggere il modello cinematico e dinamico del robot.
+	* hardware_interface::EffortJointInterface: controllare in coppia e leggere variabili di giunto.
+	* franka_hw::FrankaPoseCartesianInterface:  leggere la posa e inviare comandi in cartesiano.
+	
+         
+	Nella classe si possono definire tre handler, che verranno inizializzati nel metodo init.
+	
+		- std::unique_ptr<franka_hw::FrankaCartesianPoseHandle> cartesian_pose_handle_;
+		- std::unique_ptr<franka_hw::FrankaModelHandle> model_handle_;
+		- std::vector<hardware_interface::JointHandle> joint_handles_; 
+	
+	Nota: per il controllo in coppia serve un vettore di JointHandle come nel caso
+	      del controllo di moto in spazio giunti.
+ 
+2. Nel file joint_impedance_controller.cpp implementare i metodi obbligatori: 
+
+   * bool init (hardware_interface::RobotHW* hw, ros::NodeHandle& nh); 
+   	
+		Per ogni interfaccia hardware dichiarata come template parameter si può inizializzare la corrispondente
+		variabile di tipo handle. Nell' ordine in cui vengono inizalizzate nell esempio:
+
+		Per l'interfaccia hardware franka_hw::FrankaModelInterface:
+			
+				1. auto* model_interface = robot_hw->get<franka_hw::FrankaModelInterface>();
+
+				2. model_handle_ = std::make_unique<franka_hw::FrankaModelHandle>(
+					model_interface->getHandle(arm_id + "_model"));
+
+		Per l'interfaccia hardware franka_hw::FrankaPoseCartesianInterface:
+
+				1. auto* cartesian_pose_interface = robot_hw->get<franka_hw::FrankaPoseCartesianInterface>();
+					
+				2. cartesian_pose_handle_ = std::make_unique<franka_hw::FrankaCartesianPoseHandle>(
+					cartesian_pose_interface->getHandle(arm_id + "_robot"));
+
+		Per l'interfaccia hardware hardware_interface::EffortJointInterface:
+
+				1. auto* effort_joint_interface = robot_hw->get<hardware_interface::EffortJointInterface>();
+
+				2. joint_handles_.push_back(effort_joint_interface->getHandle(joint_names[i]));
+		
+			# Nota: push_back è equivalente a fare joint_handles_[i] = effort_joint_interface->getHandle(joint_names[i])
+		
+	
+	Nota: tutti e 3 gli handler possono essere utilizzati nel metodo update perchè sono attributi della classe controller 
+	e non solo variabili del metodo init.
+	
+   * void update (const ros::Time& time, const ros::Duration& period);  
+   		
+   		Va definito il loop di controllo che verrà eseguito ad una frequenza di 1kHz.
+   		In questo loop si utilizzano i tre handler inizializzati precedentemente: uno per il moto nel cartesiano 
+		(e accedere allo stato del robot), uno per accedere al modello del robot e un altro handler per controllare
+		in coppia ( e accede alle variabili di giunto). Nell'esempio si sfruttano nel seguente modo:
+
+		# Perchè utilizzare un handler per il controllo in coppia e uno per il controllo di moto cartesiano?
+		# L'idea di offrire EffortJointInterface in combinazione con una qualsiasi motion generator interface
+		# è quella di mettere a disposizione del controllo in coppia un algoritmo di inversione cinematica.
+		# Infatti, quando si utilizza il metodo cartesian_pose_handle_->SetCommand() tale comando non viene applicato 
+		# (perchè ha precedenza il comando in coppia) però il corrispondente valore desiderato delle variabili di giunto
+		# viene ugualmente calcolato e reso disponibile nell'iterazione successiva del metodo update().
+		# Ex. franka::RobotState robot_state = cartesian_pose_handle_->getRobotState();
+		# std::array<double,7> q_d = robot_state.q_d;
+		
+		# In this case you would claim the combination EffortJointInterface + FrankaCartesianPoseInterface, stream
+		#  your trajectory into the FrankaCartesianPoseInterface, and compute your joint-level torque commands based
+		#   on the resulting desired joint pose (q_d) from the robot state. 
+		# This allows to use the robot’s built-in inverse kinematics instead of having to solve it on your own.
+
+
+
+		- Funzione update: 
+		# calcolo posa desiderata std::array<double, 16> pose_desired = ..
+
+		cartesian_pose_handle_->setCommand(pose_desired);
+		
+		# non viene realmente eseguita questa posa ma una volta eseguito questo comando verrà calcolata la
+		# cinematica inversa corrispondente alla posa assegnata e il riusltato q_d sarà nel robot state!	
+		
+		# Attenzione la variabile franka::RobotState non è la stessa cosa che model_handle.
+		# Possono essere utilizzati per ottenere le stesse info (?)
+		franka::RobotState robot_state = cartesian_pose_handle_->getRobotState();
+		std::array<double, 7> coriolis = model_handle_->getCoriolis();
+		std::array<double, 7> gravity = model_handle_->getGravity();
+		
+
+		# Calcolo delle coppie da fornire
+		for (size_t i = 0; i < 7; ++i) {
+			joint_handles_[i].setCommand(tau_d_saturated[i]);
+		  }
+    		
+    		
+3. Si possono implementare i due metodi opzionali:
+    
+	* void JointImpedanceExampleController::starting(const ros::Time& /*time*/) {
+						initial_pose_ = cartesian_pose_handle_->getRobotState().O_T_EE_d;
+						}	# Eseguito prima di update
+
+
+	* void stopping (const ros::Time& time);  // Eseguito al termine del loop di update
+
+
+
+
+
+# Metodi utili
+ 
+   
+   
+   
+   
+   
+   

@@ -1,0 +1,49 @@
+
+
+Controllo di moto in spazio giunti: 
+
+1. Nel file joint_controller.h definire una classe che estende:
+
+   controller_interface::MultiInterfaceController<hardware_interface::PositionJointInterface>
+ 
+ Nota: hardware_interface::PositionJointInterface è la hardware interface che permette di leggere le variabili di giunto e comandarle. 
+       Nella classe si definisce un'interfaccia e un handler
+       
+       	- L'interfaccia è dello stesso tipo del parametro della template class:  
+       		hardware_interface::PositionJointInterface* position_joint_interface_
+       		# Non è strettamente necessario definire l'hardware interface perchè non verrà utilizzata
+			# al difuori del metodo init. Quindi anche se nel suo scope non è compreso il metodo update non
+			# è un problema. Nonostante ciò nell'esempio viene dichiarato come attributo della classe. 
+
+       	- L'handler è in questo caso un vettore di JointHandler:
+       		std::vector<hardware_interface::JointHandle> position_joint_handles_;
+ 
+2. Nel file joint_controller.cpp implementare i metodi obbligatori: 
+
+   * bool init (hardware_interface::RobotHW* hw, ros::NodeHandle& nh); 
+   		
+   		In questo metodo vanno inzializzati l'interfaccia e l'handler definiti nel joint_controller.h
+		   
+   			1. position_joint_interface_ = robot_hardware->get<hardware_interface::PositionJointInterface>();
+
+   			2. position_joint_handles_[i] = position_joint_interface_->getHandle(joint_names[i]);
+   			
+   * void update (const ros::Time& time, const ros::Duration& period);  
+   		
+   		In questo metodo va definito il loop di controllo che verrà eseguito ad una frequenza di 1kHz.
+   		Nel caso di controllo di moto in spazio giunti il comando da utilizzare è:
+   			position_joint_handles_[i].setCommand(valore_q_i);
+    		
+    		
+3. Si possono implementare i due metodi opzionali:
+   void starting (const ros::Time& time); // Eseguito prima di update
+   void stopping (const ros::Time& time);  // Eseguito al termine del loop di update
+   
+   
+   
+   
+   
+   
+   
+   
+   
