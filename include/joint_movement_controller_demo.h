@@ -12,7 +12,7 @@
 #include <ros/node_handle.h>
 #include <ros/time.h>
 
-namespace demo {
+namespace demo_controllers {
 
 class JointMovementControllerDemo : public controller_interface::MultiInterfaceController<
                                            hardware_interface::PositionJointInterface> {

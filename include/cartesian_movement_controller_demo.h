@@ -14,7 +14,7 @@
 
 #include <franka_hw/franka_cartesian_command_interface.h>
 
-namespace demo {
+namespace demo_controllers {
 
 class CartesianMovementControllerDemo
     : public controller_interface::MultiInterfaceController<franka_hw::FrankaPoseCartesianInterface,

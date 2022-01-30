@@ -13,7 +13,7 @@
 #include <pluginlib/class_list_macros.h>
 #include <ros/ros.h>
 
-namespace demo {
+namespace demo_controllers {
 
 bool CartesianMovementControllerDemo::init(hardware_interface::RobotHW* robot_hardware,
                                           ros::NodeHandle& node_handle) {
@@ -94,5 +94,5 @@ void CartesianMovementControllerDemo::update(const ros::Time& /* time */,
 
 }  // namespace demo
 
-PLUGINLIB_EXPORT_CLASS(demo::CartesianMovementControllerDemo,
+PLUGINLIB_EXPORT_CLASS(demo_controllers::CartesianMovementControllerDemo,
                        controller_interface::ControllerBase)

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(demo)
+project(demo_controllers)
 
 
 
@@ -130,7 +130,7 @@ rospy
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES demo
+ LIBRARIES demo_controllers
 # CATKIN_DEPENDS roscpp franka_example_controllers
 #  DEPENDS system_lib
 )
@@ -157,7 +157,7 @@ src/joint_impedance_controller_demo.cpp
 
 
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/demo.cpp
+#   src/${PROJECT_NAME}/demo_controllers.cpp
 # )
 
 ## Add cmake target dependencies of the library

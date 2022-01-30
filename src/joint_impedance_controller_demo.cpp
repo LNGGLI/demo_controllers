@@ -11,7 +11,7 @@
 
 #include <franka/robot_state.h>
 
-namespace demo {
+namespace demo_controllers {
 
 bool JointImpedanceControllerDemo::init(hardware_interface::RobotHW* robot_hw,
                                            ros::NodeHandle& node_handle) {
@@ -210,5 +210,5 @@ std::array<double, 7> JointImpedanceControllerDemo::saturateTorqueRate(
 
 }  // namespace demo
 
-PLUGINLIB_EXPORT_CLASS(demo::JointImpedanceControllerDemo,
+PLUGINLIB_EXPORT_CLASS(demo_controllers::JointImpedanceControllerDemo,
                        controller_interface::ControllerBase)

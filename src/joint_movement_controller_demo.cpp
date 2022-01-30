@@ -11,7 +11,7 @@
 #include <pluginlib/class_list_macros.h>
 #include <ros/ros.h>
 
-namespace demo {
+namespace demo_controllers {
 
 bool JointMovementControllerDemo::init(hardware_interface::RobotHW* robot_hardware,
                                           ros::NodeHandle& node_handle) {
@@ -82,7 +82,7 @@ void JointMovementControllerDemo::update(const ros::Time& /*time*/,
 
 }  // namespace demo
 
-PLUGINLIB_EXPORT_CLASS(demo::JointMovementControllerDemo,
+PLUGINLIB_EXPORT_CLASS(demo_controllers::JointMovementControllerDemo,
                        controller_interface::ControllerBase)
 
 // PLUGINLIB_EXPORT_CLASS(name_of_your_controller_package::NameOfYourControllerClass,
