@@ -151,6 +151,7 @@ add_library(demo_controllers
 src/joint_movement_controller_demo.cpp
 src/cartesian_movement_controller_demo.cpp
 src/joint_impedance_controller_demo.cpp
+src/joint_reconfiguration_demo.cpp
 )
 # Serve come library e non come executable perchè non ha il main.
 
@@ -192,6 +193,17 @@ src/joint_impedance_controller_demo.cpp
  ${catkin_LIBRARIES} 
  ${Franka_LIBRARIES}
  )
+
+
+
+target_include_directories(demo_controllers SYSTEM PUBLIC
+  ${Franka_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+)
+target_include_directories(demo_controllers PUBLIC
+  include
+)
 
 #############
 ## Install ##

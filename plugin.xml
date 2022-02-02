@@ -1,0 +1,41 @@
+<library path="lib/libdemo_controllers">
+
+  <class name="demo_controllers/JointMovementControllerDemo" type="demo_controllers::JointMovementControllerDemo" base_class_type="controller_interface::ControllerBase">
+    <description>
+      A controller that executes a short motion based on joint velocities to demonstrate correct usage
+    </description>
+  </class>
+  
+  <class name="demo_controllers/CartesianMovementControllerDemo" type="demo_controllers::CartesianMovementControllerDemo" base_class_type="controller_interface::ControllerBase">
+    <description>
+      Movimento nel cartesiano.
+    </description>
+  </class>
+
+  <class name="demo_controllers/JointImpedanceControllerDemo" type="demo_controllers::JointImpedanceControllerDemo" base_class_type="controller_interface::ControllerBase">
+    <description>
+      Controllo di impedenza in spazio giunti.
+    </description>
+  </class>
+
+  
+   <class name="demo_controllers/JointReconfigControllerDemo" type="demo_controllers::JointReconfigControllerDemo" base_class_type="controller_interface::ControllerBase">
+    <description>
+      Riconfigurazione in spazio giunti.
+    </description>
+  </class>
+
+</library>
+
+
+
+<!-- 
+<library path="lib/lib<name_of_your_controller_library>">
+  <class name="name_of_your_controller_package/NameOfYourControllerClass"
+         type="name_of_your_controller_package::NameOfYourControllerClass"
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      Some text to describe what your controller is doing
+    </description>
+  </class>
+</library> -->

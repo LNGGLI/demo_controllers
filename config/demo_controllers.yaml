@@ -1,6 +1,5 @@
-
 joint_movement_controller_demo:
-    type: demo/JointMovementControllerDemo
+    type: demo_controllers/JointMovementControllerDemo
     joint_names:
         - panda_joint1
         - panda_joint2
@@ -11,12 +10,12 @@ joint_movement_controller_demo:
         - panda_joint7
 
 cartesian_movement_controller_demo:
-    type: demo/CartesianMovementControllerDemo
+    type: demo_controllerso/CartesianMovementControllerDemo
     arm_id: panda
 
 
 joint_impedance_controller_demo:
-    type: demo/JointImpedanceControllerDemo
+    type: demo_controllers/JointImpedanceControllerDemo
     arm_id: panda
     joint_names:
         - panda_joint1
@@ -47,3 +46,15 @@ joint_impedance_controller_demo:
     vel_max: 0.15
     publish_rate: 10.0
     coriolis_factor: 1.0
+
+
+joint_reconfiguration_demo:
+    type: demo_controllers/JointReconfigControllerDemo
+    joint_names:
+        - panda_joint1
+        - panda_joint2
+        - panda_joint3
+        - panda_joint4
+        - panda_joint5
+        - panda_joint6
+        - panda_joint7
