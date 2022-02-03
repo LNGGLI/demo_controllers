@@ -152,6 +152,7 @@ src/joint_movement_controller_demo.cpp
 src/cartesian_movement_controller_demo.cpp
 src/joint_impedance_controller_demo.cpp
 src/joint_reconfiguration_demo.cpp
+src/joint_reconfiguration_pilotato.cpp
 )
 # Serve come library e non come executable perchè non ha il main.
 
