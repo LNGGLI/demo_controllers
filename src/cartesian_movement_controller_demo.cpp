@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Franka Emika GmbH
 // Use of this source code is governed by the Apache-2.0 license, see LICENSE
-#include <cartesian_movement_controller_demo.h>
+#include <demo_controllers/cartesian_movement_controller_demo.h>
 
 #include <cmath>
 #include <memory>

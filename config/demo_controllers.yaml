@@ -10,7 +10,7 @@ joint_movement_controller_demo:
         - panda_joint7
 
 cartesian_movement_controller_demo:
-    type: demo_controllerso/CartesianMovementControllerDemo
+    type: demo_controllers/CartesianMovementControllerDemo
     arm_id: panda
 
 
