@@ -31,8 +31,9 @@ class JointReconfPilotato : public controller_interface::MultiInterfaceControlle
 
   unsigned int n_joints_ = 7;
   realtime_tools::RealtimeBuffer<std::vector<double>> commands_buffer_;
-  ros::NodeHandle nh_;
   ros::Subscriber sub_command_;
+
+  
 };
 
 }  // namespace demo
