@@ -50,7 +50,6 @@ bool JointReconfPilotato::init(hardware_interface::RobotHW* robot_hardware,
   commands_buffer_.writeFromNonRT(std::vector<double>(n_joints_, 0.0));
   sub_command_ = node_handle.subscribe<trajectory_msgs::JointTrajectoryPoint>("joint_commands", 1, &JointReconfPilotato::commandCB, this);
   
-  
 
   return true;
 }

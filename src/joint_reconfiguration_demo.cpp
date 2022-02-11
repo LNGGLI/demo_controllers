@@ -13,8 +13,10 @@
 
 namespace demo_controllers {
 
-std::array<double, 7> q_goal{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
-double tf = 10; // s
+// std::array<double, 7> q_goal{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
+std::array<double, 7> q_goal{{0.547957, -0.339517, 0.172264, -1.95984, 0.102601,1.4998, -0.367424}};
+
+double tf = 20; // s
 
 bool JointReconfigControllerDemo::init(hardware_interface::RobotHW* robot_hardware,
                                           ros::NodeHandle& node_handle) {
@@ -72,7 +74,7 @@ void JointReconfigControllerDemo::update(const ros::Time& /*time*/,
   for(int i = 0; i< 7; i++){
     q_command[i] = q_init_[i] + (q_goal[i] - q_init_[i])*(6*pow(tau,5)-15*pow(tau,4)+10*pow(tau,3));
   }
-
+    
   if(elapsed_time_.toSec() < tf) {
     for(int i = 0; i< 7; i++){
       position_joint_handles_[i].setCommand(q_command[i]);

@@ -41,16 +41,6 @@ bool JointMovementControllerDemo::init(hardware_interface::RobotHW* robot_hardwa
     }
   }
 
-  std::array<double, 7> q_start{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
-  for (size_t i = 0; i < q_start.size(); i++) {
-    if (std::abs(position_joint_handles_[i].getPosition() - q_start[i]) > 0.1) {
-      ROS_ERROR_STREAM(
-          "JointMovementControllerDemo: Robot is not in the expected starting position for "
-          "running this example. Run `roslaunch demo move_to_start.launch "
-          "robot_ip:=<robot-ip> load_gripper:=<has-attached-gripper>` first.");
-      return false;
-    }
-  }
 
   return true;
 }
