@@ -48,9 +48,8 @@ bool JointReconfPilotato::init(hardware_interface::RobotHW* robot_hardware,
   // inizializzazione del buffer realtime e del subscriber
 
   commands_buffer_.writeFromNonRT(std::vector<double>(n_joints_, 0.0));
-  sub_command_ = node_handle.subscribe<trajectory_msgs::JointTrajectoryPoint>("joint_commands", 1, &JointReconfPilotato::commandCB, this);
-  
-
+  sub_command_ = node_handle.subscribe<trajectory_msgs::JointTrajectoryPoint>("/joint_commands", 1, &JointReconfPilotato::commandCB, this);
+  pub_command_ = node_handle.advertise<trajectory_msgs::JointTrajectoryPoint>("/joint_commands_letti", 1);
   return true;
 }
 
@@ -67,11 +66,21 @@ void JointReconfPilotato::starting(const ros::Time& /* time */) {
   elapsed_time_ = ros::Duration(0.0);
 }
 
+
 void JointReconfPilotato::update(const ros::Time& /*time*/,
                                             const ros::Duration& period) {
 
+  //trajectory_msgs::JointTrajectoryPoint msg;                                    
   std::vector<double> & commands = *commands_buffer_.readFromRT();
   
+  // std::cout << ros::Time::now().toSec() - tempo_prec_ << "\n";
+  // tempo_prec_ = ros::Time::now().toSec();
+  // for(int i=0; i< 7; i++){
+  //   msg.positions.push_back(commands[i]);
+  // }
+  // pub_command_.publish(msg);
+
+
   for(int i = 0;i<7;i++){
     position_joint_handles_[i].setCommand(commands[i]);
   }

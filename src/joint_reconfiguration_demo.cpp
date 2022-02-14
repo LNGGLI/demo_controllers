@@ -13,10 +13,10 @@
 
 namespace demo_controllers {
 
-// std::array<double, 7> q_goal{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
-std::array<double, 7> q_goal{{0.547957, -0.339517, 0.172264, -1.95984, 0.102601,1.4998, -0.367424}};
+ std::array<double, 7> q_goal{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
+//std::array<double, 7> q_goal{{0.547957, -0.339517, 0.172264, -1.95984, 0.102601,1.4998, -0.367424}};
 
-double tf = 20; // s
+double tf = 10; // s
 
 bool JointReconfigControllerDemo::init(hardware_interface::RobotHW* robot_hardware,
                                           ros::NodeHandle& node_handle) {
