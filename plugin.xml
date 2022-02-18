@@ -25,7 +25,7 @@
     </description>
   </class>
 
-  <class name="demo_controllers/JointReconfPilotato" type="demo_controllers::JointReconfigControllerDemo" base_class_type="controller_interface::ControllerBase">
+  <class name="demo_controllers/JointReconfPilotato" type="demo_controllers::JointReconfPilotato" base_class_type="controller_interface::ControllerBase">
     <description>
       Riconfigurazione in spazio giunti.
     </description>
