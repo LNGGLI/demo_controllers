@@ -26,6 +26,9 @@ class JointReconfigControllerDemo : public controller_interface::MultiInterfaceC
   std::vector<hardware_interface::JointHandle> position_joint_handles_;
   ros::Duration elapsed_time_;
   std::array<double, 7> q_init_{};
+
+
+  ros::Publisher pub_command_update_;
 };
 
 }  // namespace demo

@@ -22,7 +22,10 @@ class JointReconfPilotato : public controller_interface::MultiInterfaceControlle
   bool init(hardware_interface::RobotHW* robot_hardware, ros::NodeHandle& node_handle) override;
   void starting(const ros::Time&) override;
   void update(const ros::Time&, const ros::Duration& period) override;
+  void stopping(const ros::Time&) override;
   void commandCB(const trajectory_msgs::JointTrajectoryPointConstPtr& msg);
+
+  bool driver_running_ = false;
 
  private:
   hardware_interface::PositionJointInterface* position_joint_interface_;
@@ -30,9 +33,16 @@ class JointReconfPilotato : public controller_interface::MultiInterfaceControlle
   ros::Duration elapsed_time_;
 
   unsigned int n_joints_ = 7;
-  realtime_tools::RealtimeBuffer<std::vector<double>> commands_buffer_;
+  std::vector<double> current_positions_;
+  std::vector<double> commands_buffer_;
+  ros::NodeHandle nh_;
+  std::thread spinner_thread_;
+  
+
   ros::Subscriber sub_command_;
-  ros::Publisher pub_command_;
+  ros::Publisher pub_command_update_;
+  ros::Publisher pub_command_cb_;
+  
 
   double tempo_prec_ = 0.0;
 

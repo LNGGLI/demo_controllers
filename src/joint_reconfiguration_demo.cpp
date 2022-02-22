@@ -8,6 +8,7 @@
 #include <controller_interface/controller_base.h>
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/joint_command_interface.h>
+#include <trajectory_msgs/JointTrajectoryPoint.h>
 #include <pluginlib/class_list_macros.h>
 #include <ros/ros.h>
 
@@ -46,7 +47,9 @@ bool JointReconfigControllerDemo::init(hardware_interface::RobotHW* robot_hardwa
     }
   }
 
-  
+  pub_command_update_ = node_handle.advertise<trajectory_msgs::JointTrajectoryPoint>(
+          "/joint_commands_lettiUpdate", 1);
+ 
   
 
   return true;
@@ -62,6 +65,8 @@ void JointReconfigControllerDemo::starting(const ros::Time& /* time */) {
 void JointReconfigControllerDemo::update(const ros::Time& /*time*/,
                                             const ros::Duration& period) {
   
+  trajectory_msgs::JointTrajectoryPoint msg;
+  msg.positions.resize(7);
   std::array<double,7> q_command;
   
   // time = il tempo attuale
@@ -73,10 +78,12 @@ void JointReconfigControllerDemo::update(const ros::Time& /*time*/,
   // costruzione polinomio quintico q(t) = q_init + (q_goal - q_init)*q(t/tf)
   for(int i = 0; i< 7; i++){
     q_command[i] = q_init_[i] + (q_goal[i] - q_init_[i])*(6*pow(tau,5)-15*pow(tau,4)+10*pow(tau,3));
+    msg.positions[i] = q_command[i];
   }
-    
+  
   if(elapsed_time_.toSec() < tf) {
     for(int i = 0; i< 7; i++){
+      
       position_joint_handles_[i].setCommand(q_command[i]);
     }
   }
@@ -86,7 +93,7 @@ void JointReconfigControllerDemo::update(const ros::Time& /*time*/,
     }
   }
 
-  
+  pub_command_update_.publish(msg);
  
 
   
